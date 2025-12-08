@@ -5,13 +5,16 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Siddhesh Yeerabattini | Fullstack Developer</title>
     
+    <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
     
+    <!-- Fonts: Poppins -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
+    <!-- Config -->
     <script>
         tailwind.config = {
             theme: {
@@ -28,6 +31,7 @@
                     },
                     animation: {
                         'float': 'float 6s ease-in-out infinite',
+                        'float-delayed': 'float 6s ease-in-out 3s infinite',
                         'spin-slow': 'spin 12s linear infinite',
                     },
                     keyframes: {
@@ -52,6 +56,7 @@
                 cursor: none;
             }
             font-family: 'Poppins', sans-serif;
+            transition: background-color 0.3s;
         }
 
         /* Custom Cursor - Hidden on Touch Devices */
@@ -61,21 +66,32 @@
         @media (hover: hover) and (pointer: fine) {
             .cursor-dot {
                 display: block;
-                width: 8px; height: 8px; background: #2B323F;
+                width: 8px; height: 8px; background: #2B323F; /* Default Dark */
                 position: fixed; top: 0; left: 0; border-radius: 50%; z-index: 9999; pointer-events: none;
-                transition: transform 0.1s;
+                transition: transform 0.1s, background 0.2s;
             }
             .cursor-outline {
                 display: block;
-                width: 40px; height: 40px; border: 1px solid rgba(43, 50, 63, 0.3);
+                width: 40px; height: 40px; border: 1px solid rgba(43, 50, 63, 0.3); /* Default Dark Border */
                 position: fixed; top: 0; left: 0; transform: translate(-50%, -50%); border-radius: 50%; z-index: 9999; pointer-events: none;
-                transition: width 0.3s, height 0.3s, background 0.3s, border-color 0.3s;
+                transition: width 0.3s, height 0.3s, background 0.3s, border-color 0.2s;
             }
+            
+            /* Hover State (Scale up) */
             body.hovering .cursor-dot { transform: scale(0.5); }
             body.hovering .cursor-outline { 
                 width: 60px; height: 60px; 
                 background: rgba(236, 94, 39, 0.1); 
                 border-color: #EC5E27; 
+            }
+
+            /* Dark Background State (Change Color to Orange) */
+            body.on-dark-bg .cursor-dot {
+                background: #EC5E27 !important; /* Brand Orange on Dark */
+            }
+            body.on-dark-bg .cursor-outline {
+                border-color: #EC5E27 !important;
+                background: rgba(236, 94, 39, 0.05); /* Faint orange tint */
             }
         }
 
@@ -129,68 +145,99 @@
         #mobile-menu.open {
             transform: translateX(0);
         }
+
+        /* Scroll To Top Button CSS */
+        #scrollToTop {
+            transition: all 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+        #scrollToTop.show {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* Code Window Tilt Effect */
+        .code-window {
+            transition: transform 0.3s ease-out;
+            transform-style: preserve-3d;
+        }
+        .code-window:hover {
+            transform: rotateY(5deg) rotateX(2deg) scale(1.02);
+        }
     </style>
 </head>
 <body class="antialiased selection:bg-brandOrange selection:text-white">
 
+    <!-- Cursor -->
     <div class="cursor-dot"></div>
     <div class="cursor-outline"></div>
 
+    <!-- Scroll To Top Button -->
+    <button id="scrollToTop" class="fixed bottom-8 left-8 md:left-auto md:right-12 z-50 bg-brandOrange text-milk w-12 h-12 rounded-full flex items-center justify-center shadow-lg translate-y-20 opacity-0 hover:bg-grayBlue hover-trigger pointer-events-auto cursor-pointer border-none outline-none">
+        <i class="fas fa-arrow-up text-lg"></i>
+    </button>
+
+    <!-- Navigation -->
     <nav class="fixed top-0 w-full z-50 px-6 md:px-8 py-4 md:py-6 flex justify-between items-center bg-milk/90 backdrop-blur-md">
-        <div class="text-xl md:text-2xl font-bold tracking-tighter flex items-center gap-2 hover-trigger cursor-none relative z-50">
+        <div class="text-xl md:text-2xl font-bold tracking-tighter flex items-center gap-2 hover-trigger cursor-none relative z-50 pointer-events-auto"
+        onclick="window.location.href='#home'">
             <span class="w-8 h-8 bg-grayBlue text-milk rounded-full flex items-center justify-center font-bold">S</span>
             SIDDHESH
         </div>
 
+        <!-- Desktop Menu -->
         <div class="hidden md:flex gap-12 text-sm font-medium tracking-wide text-grayBlue/60">
             <a href="#home" class="hover:text-grayBlue transition-colors hover-trigger">HOME</a>
             <a href="#about" class="hover:text-grayBlue transition-colors hover-trigger">ABOUT</a>
             <a href="#services" class="hover:text-grayBlue transition-colors hover-trigger">SERVICES</a>
-            <a href="#projects" class="hover:text-grayBlue transition-colors hover-trigger">WORK</a>
         </div>
 
-        <a href="#contact" class="hidden md:block px-6 py-2 border border-grayBlue text-grayBlue text-sm font-bold hover:bg-grayBlue hover:text-white transition-all hover-trigger rounded-full">
+        <!-- dark-trigger added here -->
+        <a href="#contact" class="hidden md:block px-6 py-2 border border-grayBlue text-grayBlue text-sm font-bold hover:bg-grayBlue hover:text-white transition-all hover-trigger dark-trigger rounded-full">
             LET'S TALK
         </a>
 
+        <!-- Mobile Menu Toggle -->
         <button id="menu-btn" class="md:hidden text-2xl text-grayBlue z-50 focus:outline-none">
             <i class="fas fa-bars"></i>
         </button>
     </nav>
 
+    <!-- Mobile Menu Overlay -->
     <div id="mobile-menu" class="fixed inset-0 bg-milk z-40 flex flex-col justify-center items-center gap-8 md:hidden">
         <a href="#home" class="text-2xl font-bold text-grayBlue mobile-link">HOME</a>
         <a href="#about" class="text-2xl font-bold text-grayBlue mobile-link">ABOUT</a>
         <a href="#services" class="text-2xl font-bold text-grayBlue mobile-link">SERVICES</a>
-        <a href="#projects" class="text-2xl font-bold text-grayBlue mobile-link">WORK</a>
         <a href="#contact" class="px-8 py-3 border border-grayBlue text-grayBlue text-lg font-bold rounded-full mobile-link">LET'S TALK</a>
     </div>
 
+    <!-- Side Navigation (Right - Hidden on Mobile) -->
     <div class="fixed right-8 top-1/2 -translate-y-1/2 z-40 hidden md:flex flex-col items-center gap-6">
         <div id="page-num" class="font-bold text-grayBlue text-xl">01</div>
         <a href="#home" class="dot-link w-2 h-2 rounded-full bg-gray-300 hover:bg-grayBlue hover-trigger" data-index="01"></a>
         <a href="#about" class="dot-link w-2 h-2 rounded-full bg-gray-300 hover:bg-grayBlue hover-trigger" data-index="02"></a>
         <a href="#services" class="dot-link w-2 h-2 rounded-full bg-gray-300 hover:bg-grayBlue hover-trigger" data-index="03"></a>
-        <a href="#projects" class="dot-link w-2 h-2 rounded-full bg-gray-300 hover:bg-grayBlue hover-trigger" data-index="04"></a>
-        <a href="#pricing" class="dot-link w-2 h-2 rounded-full bg-gray-300 hover:bg-grayBlue hover-trigger" data-index="05"></a>
+        <!-- <a href="#pricing" class="dot-link w-2 h-2 rounded-full bg-gray-300 hover:bg-grayBlue hover-trigger" data-index="05"></a> -->
         <div class="h-16 w-[1px] bg-gray-300"></div>
         <div class="text-[10px] font-bold tracking-widest -rotate-90 text-gray-400">SCROLL</div>
     </div>
 
+    <!-- HERO SECTION -->
     <section id="home" class="section min-h-screen pt-32 md:pt-24 relative flex items-center overflow-hidden">
+        <!-- Big Background Text -->
         <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full text-center pointer-events-none opacity-[0.03]">
-            <h1 class="text-[15vw] font-black leading-none text-grayBlue">CREATIVE</h1>
+            <h1 class="text-[15vw] font-black leading-none text-grayBlue">DEVELOPER</h1>
         </div>
 
         <div class="container mx-auto px-6 grid grid-cols-1 md:grid-cols-12 h-full items-center relative z-10 gap-12 md:gap-0">
             
+            <!-- Left Content -->
             <div class="md:col-span-5 flex flex-col justify-center text-center md:text-left order-2 md:order-1">
                 <div class="flex items-center justify-center md:justify-start gap-3 mb-8 reveal">
                     <span class="w-16 h-[1px] bg-brandOrange"></span>
-                    <span class="text-xs font-bold tracking-widest text-brandOrange uppercase font-sans">Based in Mumbai</span>
+                    <span class="text-xs font-bold tracking-widest text-brandOrange uppercase font-sans">Based in India</span>
                 </div>
 
-                <h1 class="text-5xl md:text-8xl font-black leading-[1.1] md:leading-[0.9] mb-6 text-grayBlue reveal" style="transition-delay: 100ms">
+                <h1 class="text-5xl md:text-7xl font-black leading-[1.1] md:leading-[0.95] mb-6 text-grayBlue reveal w-fit mx-auto md:mx-0 hover-trigger" style="transition-delay: 100ms">
                     Siddhesh<br> Yeerabattini
                 </h1>
 
@@ -201,7 +248,7 @@
                 </p>
 
                 <div class="flex gap-6 justify-center md:justify-start reveal" style="transition-delay: 300ms">
-                    <a href="#projects" class="group flex items-center gap-3 text-grayBlue font-bold hover-trigger">
+                    <a href="about.html" class="group flex items-center gap-3 text-grayBlue font-bold hover-trigger">
                         <span class="w-12 h-12 rounded-full border border-grayBlue flex items-center justify-center group-hover:bg-grayBlue group-hover:text-white transition-all">
                             <i class="fas fa-arrow-down group-hover:animate-bounce"></i>
                         </span>
@@ -210,13 +257,17 @@
                 </div>
             </div>
 
+            <!-- Right Visual (Joker Style) -->
             <div class="md:col-span-7 relative flex items-center justify-center md:justify-end order-1 md:order-2">
                 
-                <div class="relative w-full max-w-[320px] md:max-w-[400px] h-[450px] md:h-[550px] group hover-trigger">
+                <!-- Main Image Container - Added dark-trigger class -->
+                <div class="relative w-full max-w-[320px] md:max-w-[400px] h-[450px] md:h-[550px] group hover-trigger dark-trigger">
+                    <!-- Image -->
                     <div class="absolute inset-0 bg-gray-200 rounded-lg overflow-hidden grayscale group-hover:grayscale-0 transition-all duration-700 ease-out hero-mask">
                          <img src="https://images.unsplash.com/photo-1555066931-4365d14bab8c?q=80&w=1000&auto=format&fit=crop" class="w-full h-full object-cover">
                     </div>
 
+                    <!-- Floating Badge 1 -->
                     <div class="absolute top-8 md:top-12 -left-4 md:-left-12 bg-white/80 backdrop-blur border border-grayBlue/10 p-3 md:p-4 shadow-xl rounded-lg animate-float">
                         <div class="flex items-center gap-3 mb-1">
                             <div class="w-2 h-2 rounded-full bg-brandOrange"></div>
@@ -225,6 +276,7 @@
                         <p class="text-[10px] md:text-xs text-gray-500 font-medium">AI / Python </p>
                     </div>
 
+                    <!-- Floating Badge 2 -->
                     <div class="absolute bottom-16 md:bottom-20 -right-4 md:-right-8 bg-white/80 backdrop-blur border border-grayBlue/10 p-3 md:p-4 shadow-xl rounded-lg animate-float" style="animation-delay: 2s">
                          <div class="flex items-center gap-3 mb-1">
                             <div class="w-2 h-2 rounded-full bg-grayBlue"></div>
@@ -238,7 +290,8 @@
         </div>
     </section>
 
-    <div class="bg-grayBlue py-4 rotate-1 scale-105 border-y-4 border-brandOrange">
+    <!-- MARQUEE STRIP (Added dark-trigger) -->
+    <div class="bg-grayBlue py-4 rotate-1 scale-105 border-y-4 border-brandOrange dark-trigger relative z-20">
         <div class="marquee-container">
             <div class="marquee-content text-milk font-bold text-xl md:text-2xl tracking-widest uppercase">
                 Python • Django • React • AWS • Microservices • Full Stack • UI/UX • AI Solutions • Python • Django • React • AWS • Microservices • Full Stack • UI/UX • AI Solutions •
@@ -246,50 +299,87 @@
         </div>
     </div>
 
-    <section id="about" class="section py-20 md:py-32 relative">
-        <div class="container mx-auto px-6">
-            <div class="grid md:grid-cols-2 gap-12 md:gap-20">
-                <div class="reveal">
-                    <h2 class="text-4xl md:text-5xl font-black text-grayBlue mb-8">Technical <br><span class="text-brandOrange">Arsenal</span></h2>
-                    <p class="text-gray-600 text-base md:text-lg leading-relaxed mb-8 font-light">
-                        I don't just write code; I engineer solutions. My stack is built for speed, security, and scalability. From crafting intuitive frontends to deploying production-ready backend systems on AWS.
+    <!-- NEW ABOUT SECTION (Dark & Interesting) -->
+    <section id="about" class="section py-32 bg-grayBlue px-6 relative dark-trigger overflow-hidden -mt-12 z-10">
+        <!-- Giant Faint Background Text -->
+        <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full text-center pointer-events-none opacity-[0.03] select-none">
+            <h2 class="text-[25vw] font-black leading-none text-white">ABOUT</h2>
+        </div>
+
+        <div class="container mx-auto relative z-10">
+            <div class="grid md:grid-cols-2 gap-16 items-center">
+                
+                <!-- Left: Text Content -->
+                <div class="reveal text-center md:text-left">
+                    <h2 class="text-4xl md:text-6xl font-black text-white mb-8">
+                        About <span class="text-brandOrange">Me</span>
+                    </h2>
+                    <p class="text-gray-300 text-lg md:text-xl leading-relaxed mb-10 font-light">
+                        I'm a <span class="text-white font-medium">full‑stack developer</span> specializing in building scalable applications with strong backends, modern web applications, e‑commerce systems, custom dashboards, and API development.
+                        <br><br>
+                        I build fast, scalable, and beautiful digital products that live on the web.
                     </p>
-                    <a href="#" class="text-brandOrange font-bold border-b-2 border-brandOrange pb-1 hover:text-grayBlue hover:border-grayBlue transition-colors hover-trigger">Download Resume</a>
+                    
+                    <a href="about.html" class="inline-flex items-center gap-3 px-8 py-3 border-2 border-brandOrange text-brandOrange font-bold rounded-full hover:bg-brandOrange hover:text-white transition-all hover-trigger group">
+                        <span>Know More</span>
+                        <i class="fas fa-arrow-right group-hover:translate-x-1 transition-transform"></i>
+                    </a>
                 </div>
 
-                <div class="space-y-8 reveal" style="transition-delay: 100ms">
-                    <div class="group">
-                        <div class="flex justify-between mb-2">
-                            <h3 class="font-bold text-grayBlue text-sm md:text-base">Backend Architecture</h3>
-                            <span class="text-brandOrange font-medium">95%</span>
-                        </div>
-                        <div class="h-1.5 w-full bg-gray-200 overflow-hidden rounded-full">
-                            <div class="h-full bg-grayBlue w-[95%] group-hover:bg-brandOrange transition-colors duration-500 rounded-full"></div>
-                        </div>
-                    </div>
-                    <div class="group">
-                        <div class="flex justify-between mb-2">
-                            <h3 class="font-bold text-grayBlue text-sm md:text-base">Frontend Development</h3>
-                            <span class="text-brandOrange font-medium">85%</span>
-                        </div>
-                        <div class="h-1.5 w-full bg-gray-200 overflow-hidden rounded-full">
-                            <div class="h-full bg-grayBlue w-[85%] group-hover:bg-brandOrange transition-colors duration-500 rounded-full"></div>
-                        </div>
-                    </div>
-                    <div class="group">
-                        <div class="flex justify-between mb-2">
-                            <h3 class="font-bold text-grayBlue text-sm md:text-base">Cloud & DevOps</h3>
-                            <span class="text-brandOrange font-medium">80%</span>
-                        </div>
-                        <div class="h-1.5 w-full bg-gray-200 overflow-hidden rounded-full">
-                            <div class="h-full bg-grayBlue w-[80%] group-hover:bg-brandOrange transition-colors duration-500 rounded-full"></div>
+                <!-- Right: Visual Code Block -->
+                <div class="reveal hidden md:block" style="transition-delay: 100ms">
+                    <div class="relative w-full max-w-md mx-auto perspective-1000">
+                        <!-- Abstract Background Decoration -->
+                        <div class="absolute -top-10 -right-10 w-32 h-32 bg-brandOrange/20 rounded-full blur-2xl animate-float"></div>
+                        <div class="absolute -bottom-10 -left-10 w-32 h-32 bg-blue-500/20 rounded-full blur-2xl animate-float-delayed"></div>
+
+                        <!-- Code Window -->
+                        <div class="code-window bg-[#1e293b] rounded-xl border border-gray-700 shadow-2xl overflow-hidden hover-trigger dark-trigger">
+                            <!-- Window Header -->
+                            <div class="bg-[#0f172a] px-4 py-3 flex items-center gap-2 border-b border-gray-700">
+                                <div class="w-3 h-3 rounded-full bg-red-500"></div>
+                                <div class="w-3 h-3 rounded-full bg-yellow-500"></div>
+                                <div class="w-3 h-3 rounded-full bg-green-500"></div>
+                                <div class="ml-4 text-xs text-gray-500 font-mono">developer.py</div>
+                            </div>
+                            
+                            <!-- Window Content -->
+                            <div class="p-6 space-y-3">
+                                <!-- Code Lines -->
+                                <div class="flex gap-3">
+                                    <div class="text-brandOrange font-mono text-sm">class</div>
+                                    <div class="text-yellow-400 font-mono text-sm">Developer:</div>
+                                </div>
+                                <div class="pl-6 space-y-2">
+                                    <div class="flex gap-2">
+                                        <div class="text-purple-400 font-mono text-sm">def</div>
+                                        <div class="text-blue-400 font-mono text-sm">__init__(self):</div>
+                                    </div>
+                                    <div class="pl-6 flex gap-2">
+                                        <div class="text-gray-400 font-mono text-sm">self.name =</div>
+                                        <div class="text-green-400 font-mono text-sm">"Siddhesh"</div>
+                                    </div>
+                                    <div class="pl-6 flex gap-2">
+                                        <div class="text-gray-400 font-mono text-sm">self.stack =</div>
+                                        <div class="text-gray-300 font-mono text-sm">["React", "Django", "AWS"]</div>
+                                    </div>
+                                    <br>
+                                    <div class="flex gap-2">
+                                        <div class="text-purple-400 font-mono text-sm">def</div>
+                                        <div class="text-blue-400 font-mono text-sm">build_future(self):</div>
+                                    </div>
+                                    <div class="pl-6 text-gray-400 font-mono text-sm">return "Scalable Solutions"</div>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
+
             </div>
         </div>
     </section>
 
+    <!-- SERVICES GRID -->
     <section id="services" class="section py-20 md:py-32 bg-gray-50 border-y border-gray-200">
         <div class="container mx-auto px-6">
             <div class="flex flex-col md:flex-row justify-between md:items-end mb-12 md:mb-16 reveal">
@@ -300,8 +390,10 @@
                 <div class="hidden md:block w-32 h-[2px] bg-gray-300"></div>
             </div>
 
-            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+            <!-- Grid -->
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 transition-all ease-in-out">
                 
+                <!-- 1. AI Card -->
                 <div class="clean-card p-6 rounded-lg hover-trigger group reveal relative overflow-hidden">
                     <div class="absolute top-0 left-0 w-1.5 h-full bg-brandOrange"></div>
                     <i class="fas fa-brain text-2xl text-brandOrange mb-4"></i>
@@ -313,6 +405,7 @@
                     </ul>
                 </div>
 
+                <!-- 2. Chatbots -->
                 <div class="clean-card p-6 rounded-lg hover-trigger group reveal" style="transition-delay: 50ms">
                      <div class="absolute top-0 left-0 w-1.5 h-full bg-grayBlue"></div>
                     <i class="fas fa-robot text-2xl text-grayBlue mb-4"></i>
@@ -324,6 +417,7 @@
                     </ul>
                 </div>
 
+                <!-- 3. Custom Apps -->
                 <div class="clean-card p-6 rounded-lg hover-trigger group reveal" style="transition-delay: 100ms">
                     <i class="fas fa-layer-group text-2xl text-grayBlue mb-4 group-hover:text-brandOrange transition-colors"></i>
                     <h3 class="font-bold text-grayBlue mb-2 text-lg">Custom Apps</h3>
@@ -334,6 +428,7 @@
                     </ul>
                 </div>
 
+                <!-- 4. E-Commerce -->
                 <div class="clean-card p-6 rounded-lg hover-trigger group reveal" style="transition-delay: 150ms">
                     <i class="fas fa-shopping-bag text-2xl text-grayBlue mb-4 group-hover:text-brandOrange transition-colors"></i>
                     <h3 class="font-bold text-grayBlue mb-2 text-lg">E-Commerce</h3>
@@ -344,7 +439,10 @@
                     </ul>
                 </div>
 
-                <div class="clean-card p-6 rounded-lg hover-trigger group reveal" style="transition-delay: 200ms">
+                <!-- HIDDEN SERVICES (Classes added: hidden more-service) -->
+                
+                <!-- 5. Business Sites -->
+                <div class="clean-card p-6 rounded-lg hover-trigger group reveal hidden more-service" style="transition-delay: 200ms">
                     <i class="fas fa-briefcase text-2xl text-grayBlue mb-4 group-hover:text-brandOrange transition-colors"></i>
                     <h3 class="font-bold text-grayBlue mb-2 text-lg">Business Sites</h3>
                     <p class="text-xs text-gray-500 mb-4 leading-relaxed">Professional, fast, and SEO-optimized sites.</p>
@@ -354,7 +452,8 @@
                     </ul>
                 </div>
 
-                <div class="clean-card p-6 rounded-lg hover-trigger group reveal" style="transition-delay: 250ms">
+                <!-- 6. API Dev -->
+                <div class="clean-card p-6 rounded-lg hover-trigger group reveal hidden more-service" style="transition-delay: 250ms">
                     <i class="fas fa-network-wired text-2xl text-grayBlue mb-4 group-hover:text-brandOrange transition-colors"></i>
                     <h3 class="font-bold text-grayBlue mb-2 text-lg">API Dev</h3>
                     <p class="text-xs text-gray-500 mb-4 leading-relaxed">Secure RESTful backend systems for apps.</p>
@@ -364,7 +463,8 @@
                     </ul>
                 </div>
 
-                <div class="clean-card p-6 rounded-lg hover-trigger group reveal" style="transition-delay: 300ms">
+                <!-- 7. Deployment -->
+                <div class="clean-card p-6 rounded-lg hover-trigger group reveal hidden more-service" style="transition-delay: 300ms">
                     <i class="fas fa-cloud-upload-alt text-2xl text-grayBlue mb-4 group-hover:text-brandOrange transition-colors"></i>
                     <h3 class="font-bold text-grayBlue mb-2 text-lg">Deployment</h3>
                     <p class="text-xs text-gray-500 mb-4 leading-relaxed">AWS Lambda setup, Domain setup, Server optimization.</p>
@@ -374,7 +474,8 @@
                     </ul>
                 </div>
 
-                <div class="clean-card p-6 rounded-lg hover-trigger group reveal" style="transition-delay: 350ms">
+                <!-- 8. Debugging -->
+                <div class="clean-card p-6 rounded-lg hover-trigger group reveal hidden more-service" style="transition-delay: 350ms">
                     <i class="fas fa-bug text-2xl text-grayBlue mb-4 group-hover:text-brandOrange transition-colors"></i>
                     <h3 class="font-bold text-grayBlue mb-2 text-lg">Fixing</h3>
                     <p class="text-xs text-gray-500 mb-4 leading-relaxed">Expert troubleshooting for bugs and API errors.</p>
@@ -384,7 +485,8 @@
                     </ul>
                 </div>
 
-                 <div class="clean-card p-6 rounded-lg hover-trigger group reveal" style="transition-delay: 400ms">
+                 <!-- 9. UI/UX -->
+                 <div class="clean-card p-6 rounded-lg hover-trigger group reveal hidden more-service" style="transition-delay: 400ms">
                     <i class="fas fa-paint-brush text-2xl text-grayBlue mb-4 group-hover:text-brandOrange transition-colors"></i>
                     <h3 class="font-bold text-grayBlue mb-2 text-lg">UI/UX</h3>
                     <p class="text-xs text-gray-500 mb-4 leading-relaxed">Modern, clean interfaces with React & Tailwind.</p>
@@ -394,7 +496,8 @@
                     </ul>
                 </div>
 
-                <div class="clean-card p-6 rounded-lg hover-trigger group reveal" style="transition-delay: 450ms">
+                <!-- 10. Portfolio -->
+                 <div class="clean-card p-6 rounded-lg hover-trigger group reveal hidden more-service" style="transition-delay: 450ms">
                     <i class="fas fa-id-card text-2xl text-grayBlue mb-4 group-hover:text-brandOrange transition-colors"></i>
                     <h3 class="font-bold text-grayBlue mb-2 text-lg">Portfolios</h3>
                     <p class="text-xs text-gray-500 mb-4 leading-relaxed">Stand out with a personal branding website.</p>
@@ -405,14 +508,23 @@
                 </div>
 
             </div>
+
+            <!-- VIEW MORE BUTTON (Updated Style) -->
+            <div class="mt-16 text-center reveal">
+                <button id="viewMoreBtn" class="group flex items-center justify-center gap-3 text-grayBlue font-bold hover-trigger mx-auto">
+                    <span class="btn-text">View More Services</span> <i class="fas fa-chevron-down transition-transform group-hover:translate-y-1"></i>
+                </button>
+            </div>
         </div>
     </section>
 
-    <section id="pricing" class="section py-20 md:py-32 bg-gray-50 relative">
+    <!-- PRICING SECTION -->
+    <!-- <section id="pricing" class="section py-20 md:py-32 bg-gray-50 relative">
         <div class="container mx-auto px-6 max-w-4xl">
             <h2 class="text-3xl md:text-4xl font-black text-grayBlue mb-12 text-center">Rate <span class="text-brandOrange">Card</span></h2>
             
             <div class="grid md:grid-cols-2 gap-8">
+
                 <div class="bg-white p-8 shadow-lg border-t-4 border-grayBlue hover-trigger">
                     <h3 class="text-2xl font-bold text-grayBlue mb-6">Development</h3>
                     <ul class="space-y-4">
@@ -431,7 +543,8 @@
                     </ul>
                 </div>
 
-                <div class="bg-white p-8 shadow-lg border-t-4 border-brandOrange hover-trigger">
+
+                 <div class="bg-white p-8 shadow-lg border-t-4 border-brandOrange hover-trigger">
                     <h3 class="text-2xl font-bold text-grayBlue mb-6">Apps & API</h3>
                     <ul class="space-y-4">
                         <li class="flex justify-between items-center border-b border-gray-100 pb-3">
@@ -450,12 +563,13 @@
                 </div>
             </div>
         </div>
-    </section>
+    </section> -->
 
-    <footer id="contact" class="py-24 bg-grayBlue text-center relative overflow-hidden">
+    <!-- FOOTER (Added dark-trigger) -->
+    <footer id="contact" class="py-24 bg-grayBlue text-center relative overflow-hidden dark-trigger">
         <div class="absolute top-0 left-0 w-full h-1.5 bg-gradient-to-r from-grayBlue via-brandOrange to-grayBlue"></div>
         <div class="relative z-10 px-6">
-            <h2 class="text-3xl md:text-4xl font-black text-white mb-8">READY TO DEPLOY?</h2>
+            <h2 class="text-3xl md:text-4xl font-black text-white mb-8">WORK WITH ME?</h2>
             <div class="flex justify-center gap-8 mb-12">
                 <a href="https://wa.me/919136952869" class="text-white text-3xl hover:text-brandOrange hover:-translate-y-2 transition-all hover-trigger"><i class="fab fa-whatsapp"></i></a>
                 <a href="mailto:Siddheshmy2@gmail.com" class="text-white text-3xl hover:text-brandOrange hover:-translate-y-2 transition-all hover-trigger"><i class="fas fa-envelope"></i></a>
@@ -465,6 +579,7 @@
         </div>
     </footer>
 
+    <!-- SCRIPTS -->
     <script>
         // Mobile Menu Logic
         const menuBtn = document.getElementById('menu-btn');
@@ -491,6 +606,21 @@
             });
         });
 
+        // Scroll To Top Logic
+        const scrollToTopBtn = document.getElementById('scrollToTop');
+        
+        window.addEventListener('scroll', () => {
+            if (window.scrollY > 300) {
+                scrollToTopBtn.classList.add('show');
+            } else {
+                scrollToTopBtn.classList.remove('show');
+            }
+        });
+
+        scrollToTopBtn.addEventListener('click', () => {
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        });
+
         // Custom Cursor Logic
         const cursorDot = document.querySelector('.cursor-dot');
         const cursorOutline = document.querySelector('.cursor-outline');
@@ -506,11 +636,25 @@
                 left: `${x}px`,
                 top: `${y}px`
             }, { duration: 400, fill: "forwards" });
-        });
 
-        document.querySelectorAll('.hover-trigger').forEach(el => {
-            el.addEventListener('mouseenter', () => document.body.classList.add('hovering'));
-            el.addEventListener('mouseleave', () => document.body.classList.remove('hovering'));
+            // ACTIVE CURSOR COLOR CHECK
+            const target = e.target;
+            const isDark = target.matches('h1, h2, h3, h4, h5, h6, a, button, .dark-trigger, .text-grayBlue, .text-white') || 
+                           target.closest('h1, h2, h3, h4, h5, h6, a, button, .dark-trigger, .text-grayBlue, .text-white');
+
+            if (isDark) {
+                document.body.classList.add('on-dark-bg');
+            } else {
+                document.body.classList.remove('on-dark-bg');
+            }
+
+            // HOVER SCALE CHECK
+            const isHover = target.matches('.hover-trigger') || target.closest('.hover-trigger');
+            if (isHover) {
+                document.body.classList.add('hovering');
+            } else {
+                document.body.classList.remove('hovering');
+            }
         });
 
         // Scroll Spy
@@ -544,6 +688,54 @@
         }, {threshold: 0.1});
 
         document.querySelectorAll('.reveal').forEach(el => revealObserver.observe(el));
+
+        // View More Services Logic
+        const viewMoreBtn = document.getElementById('viewMoreBtn');
+        const moreServices = document.querySelectorAll('.more-service');
+        let servicesExpanded = false;
+
+        if(viewMoreBtn) {
+            viewMoreBtn.addEventListener('click', () => {
+                servicesExpanded = !servicesExpanded;
+                
+                moreServices.forEach(el => {
+                    if(servicesExpanded) {
+                        el.classList.remove('hidden');
+                        // Small delay to allow display:block to apply before animation
+                        setTimeout(() => el.classList.add('active'), 50);
+                    } else {
+                        el.classList.add('hidden');
+                        el.classList.remove('active');
+                    }
+                });
+
+                const btnText = viewMoreBtn.querySelector('.btn-text');
+                const btnIcon = viewMoreBtn.querySelector('i');
+
+                if(servicesExpanded) {
+                    // Update Text
+                    btnText.innerText = 'View Less';
+                    
+                    // Update Icon (Up Arrow)
+                    btnIcon.classList.remove('fa-chevron-down');
+                    btnIcon.classList.add('fa-chevron-up');
+
+                    // Smooth scroll back to services title if closing
+                    document.getElementById('services').scrollIntoView({behavior: 'smooth'});
+                    
+                } else {
+                    // Update Text
+                    btnText.innerText = 'View More Services';
+                    
+                    // Update Icon (Down Arrow)
+                    btnIcon.classList.remove('fa-chevron-up');
+                    btnIcon.classList.add('fa-chevron-down');
+                    
+                    // Smooth scroll back to services title if closing
+                    document.getElementById('services').scrollIntoView({behavior: 'smooth'});
+                }
+            });
+        }
     </script>
 </body>
 </html>

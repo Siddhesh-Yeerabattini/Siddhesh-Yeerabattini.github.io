@@ -1,0 +1,550 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>About Me | Siddhesh Yeerabattini</title>
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Fonts: Poppins -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <!-- Config -->
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        milk: '#FDFBF7',       
+                        grayBlue: '#2B323F',   
+                        brandOrange: '#EC5E27', 
+                        lightGray: '#E5E7EB',
+                    },
+                    fontFamily: {
+                        sans: ['Poppins', 'sans-serif'],
+                        display: ['Poppins', 'sans-serif'],
+                    },
+                    animation: {
+                        'float': 'float 6s ease-in-out infinite',
+                        'spin-slow': 'spin 12s linear infinite',
+                    },
+                    keyframes: {
+                        float: {
+                            '0%, 100%': { transform: 'translateY(0)' },
+                            '50%': { transform: 'translateY(-15px)' },
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        /* --- CORE STYLES (Identical to Main Page) --- */
+        body {
+            background-color: #FDFBF7;
+            color: #2B323F;
+            overflow-x: hidden;
+            /* Only use custom cursor on non-touch devices */
+            @media (hover: hover) and (pointer: fine) {
+                cursor: none;
+            }
+            font-family: 'Poppins', sans-serif;
+            transition: background-color 0.3s;
+        }
+
+        /* Custom Cursor - Hidden on Touch Devices */
+        .cursor-dot, .cursor-outline {
+            display: none; /* Default hidden */
+        }
+        @media (hover: hover) and (pointer: fine) {
+            .cursor-dot {
+                display: block;
+                width: 8px; height: 8px; background: #2B323F; /* Default Dark */
+                position: fixed; top: 0; left: 0; border-radius: 50%; z-index: 9999; pointer-events: none;
+                transition: transform 0.1s, background 0.2s;
+            }
+            .cursor-outline {
+                display: block;
+                width: 40px; height: 40px; border: 1px solid rgba(43, 50, 63, 0.3); /* Default Dark Border */
+                position: fixed; top: 0; left: 0; transform: translate(-50%, -50%); border-radius: 50%; z-index: 9999; pointer-events: none;
+                transition: width 0.3s, height 0.3s, background 0.3s, border-color 0.2s;
+            }
+            
+            /* Hover State (Scale up) */
+            body.hovering .cursor-dot { transform: scale(0.5); }
+            body.hovering .cursor-outline { 
+                width: 60px; height: 60px; 
+                background: rgba(236, 94, 39, 0.1); 
+                border-color: #EC5E27; 
+            }
+
+            /* Dark Background State (Change Color to Orange) */
+            body.on-dark-bg .cursor-dot {
+                background: #EC5E27 !important; /* Brand Orange on Dark */
+            }
+            body.on-dark-bg .cursor-outline {
+                border-color: #EC5E27 !important;
+                background: rgba(236, 94, 39, 0.05); /* Faint orange tint */
+            }
+        }
+
+        /* Hero Image Masking */
+        .hero-mask {
+            mask-image: radial-gradient(circle at center, black 60%, transparent 100%);
+            -webkit-mask-image: radial-gradient(circle at center, black 60%, transparent 100%);
+        }
+
+        /* Minimalist Card */
+        .clean-card {
+            background: rgba(255, 255, 255, 0.5);
+            border: 1px solid rgba(43, 50, 63, 0.1);
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+        .clean-card:hover {
+            border-color: #2B323F;
+            transform: translateY(-5px);
+            background: #fff;
+            box-shadow: 0 10px 30px rgba(43, 50, 63, 0.05);
+        }
+
+        /* Navigation Dots */
+        .dot-link { transition: all 0.3s; }
+        .dot-active {
+            background-color: #EC5E27 !important;
+            transform: scale(1.5);
+        }
+
+        /* Smooth Reveal */
+        .reveal {
+            opacity: 0;
+            transform: translateY(20px);
+            transition: all 0.8s cubic-bezier(0.5, 0, 0, 1);
+        }
+        .reveal.active {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* Marquee */
+        .marquee-container { overflow: hidden; white-space: nowrap; }
+        .marquee-content { display: inline-block; animation: marquee 20s linear infinite; }
+        @keyframes marquee { 0% { transform: translateX(0); } 100% { transform: translateX(-50%); } }
+
+        /* Mobile Menu */
+        #mobile-menu {
+            transition: transform 0.3s ease-in-out;
+            transform: translateX(100%);
+        }
+        #mobile-menu.open {
+            transform: translateX(0);
+        }
+
+        /* Scroll To Top Button CSS */
+        #scrollToTop {
+            transition: all 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+        #scrollToTop.show {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    </style>
+</head>
+<body class="antialiased selection:bg-brandOrange selection:text-white">
+
+    <!-- Cursor -->
+    <div class="cursor-dot"></div>
+    <div class="cursor-outline"></div>
+
+    <!-- Scroll To Top Button -->
+    <button id="scrollToTop" class="fixed bottom-8 left-8 md:left-auto md:right-12 z-50 bg-brandOrange text-milk w-12 h-12 rounded-full flex items-center justify-center shadow-lg translate-y-20 opacity-0 hover:bg-grayBlue hover-trigger pointer-events-auto cursor-pointer border-none outline-none">
+        <i class="fas fa-arrow-up text-lg"></i>
+    </button>
+
+    <!-- Navigation -->
+    <nav class="fixed top-0 w-full z-50 px-6 md:px-8 py-4 md:py-6 flex justify-between items-center bg-milk/90 backdrop-blur-md">
+        <div class="text-xl md:text-2xl font-bold tracking-tighter flex items-center gap-2 hover-trigger cursor-none relative z-50"
+        onClick="window.location.href='index.html'">
+            <span class="w-8 h-8 bg-grayBlue text-milk rounded-full flex items-center justify-center font-bold">S</span>
+            SIDDHESH
+        </div>
+
+        <!-- Desktop Menu -->
+        <div class="hidden md:flex gap-12 text-sm font-medium tracking-wide text-grayBlue/60">
+            <a href="index.html#home" class="hover:text-grayBlue transition-colors hover-trigger">HOME</a>
+            <!-- Keep 'about.html' or '#' since we are on the page -->
+            <a href="#" class="text-brandOrange font-bold hover-trigger">ABOUT</a>
+            <a href="index.html#services" class="hover:text-grayBlue transition-colors hover-trigger">SERVICES</a>
+        </div>
+
+        <!-- dark-trigger added here -->
+        <a href="#contact" class="hidden md:block px-6 py-2 border border-grayBlue text-grayBlue text-sm font-bold hover:bg-grayBlue hover:text-white transition-all hover-trigger dark-trigger rounded-full">
+            LET'S TALK
+        </a>
+
+        <!-- Mobile Menu Toggle -->
+        <button id="menu-btn" class="md:hidden text-2xl text-grayBlue z-50 focus:outline-none">
+            <i class="fas fa-bars"></i>
+        </button>
+    </nav>
+
+    <!-- Mobile Menu Overlay -->
+    <div id="mobile-menu" class="fixed inset-0 bg-milk z-40 flex flex-col justify-center items-center gap-8 md:hidden">
+        <a href="index.html#home" class="text-2xl font-bold text-grayBlue mobile-link">HOME</a>
+        <a href="#" class="text-2xl font-bold text-brandOrange mobile-link">ABOUT</a>
+        <a href="index.html#services" class="text-2xl font-bold text-grayBlue mobile-link">SERVICES</a>
+        <a href="#contact" class="px-8 py-3 border border-grayBlue text-grayBlue text-lg font-bold rounded-full mobile-link">LET'S TALK</a>
+    </div>
+
+    <!-- Side Navigation (Right - Hidden on Mobile) -->
+    <div class="fixed right-8 top-1/2 -translate-y-1/2 z-40 hidden md:flex flex-col items-center gap-6">
+        <div id="page-num" class="font-bold text-grayBlue text-xl">01</div>
+        <!-- Links point to the IDs on THIS page -->
+        <a href="#hero" class="dot-link w-2 h-2 rounded-full bg-gray-300 hover:bg-grayBlue hover-trigger" data-index="01"></a>
+        <a href="#my-story" class="dot-link w-2 h-2 rounded-full bg-gray-300 hover:bg-grayBlue hover-trigger" data-index="02"></a>
+        <a href="#technical-arsenal" class="dot-link w-2 h-2 rounded-full bg-gray-300 hover:bg-grayBlue hover-trigger" data-index="03"></a>
+        <a href="#timeline" class="dot-link w-2 h-2 rounded-full bg-gray-300 hover:bg-grayBlue hover-trigger" data-index="04"></a>
+        <a href="#skills" class="dot-link w-2 h-2 rounded-full bg-gray-300 hover:bg-grayBlue hover-trigger" data-index="05"></a>
+        
+        <div class="h-16 w-[1px] bg-gray-300"></div>
+        <div class="text-[10px] font-bold tracking-widest -rotate-90 text-gray-400">SCROLL</div>
+    </div>
+
+    <!-- HEADER / HERO -->
+    <!-- ADDED CLASS: section -->
+    <section id="hero" class="section pt-40 pb-20 px-6 relative overflow-hidden">
+        <div class="container mx-auto">
+            <div class="max-w-4xl mx-auto text-center reveal">
+                <span class="text-xs font-bold tracking-widest text-brandOrange uppercase mb-4 block">The Person Behind The Code</span>
+                <h1 class="text-5xl md:text-7xl font-black text-grayBlue mb-8 leading-tight dark-trigger hover-trigger">
+                    More Than Just <br> <span class="text-outline" data-text="Syntax">Syntax</span>
+                </h1>
+                <p class="text-gray-500 text-lg md:text-xl font-light leading-relaxed max-w-2xl mx-auto">
+                    I believe that code is poetry written for machines to perform miracles. My mission is to bridge the gap between complex backend logic and seamless frontend experiences.
+                </p>
+            </div>
+        </div>
+        
+        <!-- Decorative bg text -->
+        <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full text-center pointer-events-none opacity-[0.02]">
+            <h1 class="text-[20vw] font-black leading-none text-grayBlue">STORY</h1>
+        </div>
+    </section>
+
+    <!-- MY STORY SECTION -->
+    <!-- ADDED CLASS: section -->
+    <section id="my-story" class="section py-20 relative">
+        <div class="container mx-auto px-6">
+            <div class="grid md:grid-cols-2 gap-16 items-center">
+                <!-- Image/Visual -->
+                <div class="relative reveal group">
+                    <div class="absolute top-4 -left-4 w-full h-full border-2 border-brandOrange rounded-lg"></div>
+                    <div class="relative bg-gray-200 aspect-[3/4] rounded-lg overflow-hidden dark-trigger hover-trigger">
+                        <img src="https://images.unsplash.com/photo-1507238691740-187a5b1d37b8?q=80&w=1000&auto=format&fit=crop" alt="Working" class="w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all duration-700">
+                    </div>
+                </div>
+
+                <!-- Narrative -->
+                <div class="reveal" style="transition-delay: 100ms">
+                    <h2 class="text-3xl font-black text-grayBlue mb-6">From Mumbai to the <span class="text-brandOrange">Cloud</span></h2>
+                    <div class="space-y-6 text-gray-600 font-light leading-relaxed">
+                        <p>
+                            Born and raised in the bustling streets of <strong class="text-grayBlue">Mumbai, India 🇮🇳</strong>, I learned early on that chaos needs structure. That philosophy became the foundation of my coding career.
+                        </p>
+                        <p>
+                            My journey wasn't linear. It started with simple HTML pages, tweaking CSS until it broke, and fixing it again. Today, I architect scalable microservices on AWS and build reactive interfaces that feel alive.
+                        </p>
+                        <p>
+                            I don't just "build websites." I solve business problems. Whether it's optimizing a slow database query or designing an AI-driven chatbot, I look for the most efficient, scalable solution.
+                        </p>
+                        
+                        <div class="pt-4">
+                            <h3 class="font-bold text-grayBlue mb-2">My Philosophy</h3>
+                            <blockquote class="border-l-4 border-brandOrange pl-4 italic text-gray-500">
+                                "Technology should be invisible. The user shouldn't notice the code; they should only experience the solution."
+                            </blockquote>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- TECHNICAL ARSENAL BAR -->
+    <!-- ADDED CLASS: section -->
+    <section id="technical-arsenal" class="section py-20 md:py-32 relative">
+        <div class="container mx-auto px-6">
+            <div class="grid md:grid-cols-2 gap-12 md:gap-20">
+                <div class="reveal">
+                    <h2 class="text-4xl md:text-5xl font-black text-grayBlue mb-8">Technical <br><span class="text-brandOrange">Arsenal</span></h2>
+                    <p class="text-gray-600 text-base md:text-lg leading-relaxed mb-8 font-light">
+                        I don't just write code; I engineer solutions. My stack is built for speed, security, and scalability. From crafting intuitive frontends to deploying production-ready backend systems on AWS.
+                    </p>
+                    <a href="#" class="text-brandOrange font-bold border-b-2 border-brandOrange pb-1 hover:text-grayBlue hover:border-grayBlue transition-colors hover-trigger">Download Resume</a>
+                </div>
+
+                <div class="space-y-8 reveal" style="transition-delay: 100ms">
+                    <!-- Stat Bar -->
+                    <div class="group">
+                        <div class="flex justify-between mb-2">
+                            <h3 class="font-bold text-grayBlue text-sm md:text-base">Backend Architecture</h3>
+                            <span class="text-brandOrange font-medium">95%</span>
+                        </div>
+                        <div class="h-1.5 w-full bg-gray-200 overflow-hidden rounded-full">
+                            <div class="h-full bg-grayBlue w-[95%] group-hover:bg-brandOrange transition-colors duration-500 rounded-full"></div>
+                        </div>
+                    </div>
+                    <div class="group">
+                        <div class="flex justify-between mb-2">
+                            <h3 class="font-bold text-grayBlue text-sm md:text-base">Frontend Development</h3>
+                            <span class="text-brandOrange font-medium">85%</span>
+                        </div>
+                        <div class="h-1.5 w-full bg-gray-200 overflow-hidden rounded-full">
+                            <div class="h-full bg-grayBlue w-[85%] group-hover:bg-brandOrange transition-colors duration-500 rounded-full"></div>
+                        </div>
+                    </div>
+                    <div class="group">
+                        <div class="flex justify-between mb-2">
+                            <h3 class="font-bold text-grayBlue text-sm md:text-base">Cloud & DevOps</h3>
+                            <span class="text-brandOrange font-medium">80%</span>
+                        </div>
+                        <div class="h-1.5 w-full bg-gray-200 overflow-hidden rounded-full">
+                            <div class="h-full bg-grayBlue w-[80%] group-hover:bg-brandOrange transition-colors duration-500 rounded-full"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- JOURNEY TIMELINE -->
+    <!-- ADDED CLASS: section -->
+    <section id="timeline" class="section py-20 bg-gray-50 border-y border-gray-200">
+        <div class="container mx-auto px-6 max-w-4xl">
+            <h2 class="text-4xl font-black text-grayBlue mb-16 text-center reveal">The <span class="text-brandOrange">Timeline</span></h2>
+
+            <div class="space-y-12 relative pl-8 border-l border-gray-300 ml-4 md:ml-0">
+                
+                <!-- Item 1 -->
+                <div class="relative reveal hover-trigger">
+                    <div class="absolute -left-[41px] top-1 w-5 h-5 rounded-full bg-brandOrange border-4 border-white shadow-md"></div>
+                    <span class="text-xs font-bold text-brandOrange tracking-widest mb-1 block">2024 - PRESENT</span>
+                    <h3 class="text-xl font-bold text-grayBlue">Python Developer</h3>
+                    <h4 class="text-sm font-bold text-gray-400 mb-2">Nine A Business Connect</h4>
+                    <p class="text-gray-500 mt-2 font-light text-sm">
+                        Spearheading development for Bizpulse and IDP platforms. Building full-stack solutions with React and Django, creating REST APIs, and implementing skin tone analysis models.
+                    </p>
+                </div>
+
+                <!-- Item 2 -->
+                <div class="relative reveal hover-trigger" style="transition-delay: 100ms">
+                    <div class="absolute -left-[41px] top-1 w-5 h-5 rounded-full bg-grayBlue border-4 border-white shadow-md"></div>
+                    <span class="text-xs font-bold text-gray-400 tracking-widest mb-1 block">2022 - 2024</span>
+                    <h3 class="text-xl font-bold text-grayBlue">Python Developer</h3>
+                    <h4 class="text-sm font-bold text-gray-400 mb-2">LSTMS Technologies</h4>
+                    <p class="text-gray-500 mt-2 font-light text-sm">
+                        Architected REST APIs for Byme Admin and BrainyBits. Managed serverless deployments on AWS Lambda and handled migration from dev to production environments.
+                    </p>
+                </div>
+
+                <!-- Item 3 -->
+                <!-- <div class="relative reveal hover-trigger" style="transition-delay: 200ms">
+                    <div class="absolute -left-[41px] top-1 w-5 h-5 rounded-full bg-grayBlue border-4 border-white shadow-md"></div>
+                    <span class="text-xs font-bold text-gray-400 tracking-widest mb-1 block">2022</span>
+                    <h3 class="text-xl font-bold text-grayBlue">Master's in Full Stack</h3>
+                    <h4 class="text-sm font-bold text-gray-400 mb-2">Itvedant Education</h4>
+                    <p class="text-gray-500 mt-2 font-light text-sm">
+                        Completed intensive training in Java, Python, and Web Development frameworks, transitioning from a Mass Media background to software engineering.
+                    </p>
+                </div> -->
+
+            </div>
+        </div>
+    </section>
+
+    <!-- DETAILED SKILLS -->
+    <!-- ADDED CLASS: section -->
+    <section id="skills" class="section py-20 relative">
+        <div class="container mx-auto px-6">
+            <h2 class="text-4xl font-black text-grayBlue mb-16 text-center reveal">What I <span class="text-brandOrange">Speak</span></h2>
+
+            <div class="grid md:grid-cols-3 gap-8">
+                <!-- Frontend -->
+                <div class="clean-card p-8 rounded-xl reveal hover-trigger">
+                    <div class="w-12 h-12 bg-grayBlue text-white rounded-full flex items-center justify-center mb-6 text-xl">
+                        <i class="fas fa-code"></i>
+                    </div>
+                    <h3 class="text-xl font-bold text-grayBlue mb-6">Frontend</h3>
+                    <div class="flex flex-wrap gap-2">
+                        <span class="px-3 py-1 bg-gray-100 text-gray-600 text-xs font-bold rounded-full">React.js</span>
+                        <span class="px-3 py-1 bg-gray-100 text-gray-600 text-xs font-bold rounded-full">Next.js</span>
+                        <span class="px-3 py-1 bg-gray-100 text-gray-600 text-xs font-bold rounded-full">Tailwind CSS</span>
+                        <span class="px-3 py-1 bg-gray-100 text-gray-600 text-xs font-bold rounded-full">JavaScript (ES6+)</span>
+                        <span class="px-3 py-1 bg-gray-100 text-gray-600 text-xs font-bold rounded-full">Framer Motion</span>
+                    </div>
+                </div>
+
+                <!-- Backend -->
+                <div class="clean-card p-8 rounded-xl reveal hover-trigger" style="transition-delay: 100ms">
+                    <div class="w-12 h-12 bg-brandOrange text-white rounded-full flex items-center justify-center mb-6 text-xl">
+                        <i class="fas fa-server"></i>
+                    </div>
+                    <h3 class="text-xl font-bold text-grayBlue mb-6">Backend</h3>
+                    <div class="flex flex-wrap gap-2">
+                        <span class="px-3 py-1 bg-gray-100 text-gray-600 text-xs font-bold rounded-full">Python</span>
+                        <span class="px-3 py-1 bg-gray-100 text-gray-600 text-xs font-bold rounded-full">Django / DRF</span>
+                        <span class="px-3 py-1 bg-gray-100 text-gray-600 text-xs font-bold rounded-full">Node.js</span>
+                        <span class="px-3 py-1 bg-gray-100 text-gray-600 text-xs font-bold rounded-full">PostgreSQL</span>
+                        <span class="px-3 py-1 bg-gray-100 text-gray-600 text-xs font-bold rounded-full">Redis</span>
+                    </div>
+                </div>
+
+                <!-- Tools & AI -->
+                <div class="clean-card p-8 rounded-xl reveal hover-trigger" style="transition-delay: 200ms">
+                    <div class="w-12 h-12 bg-grayBlue text-white rounded-full flex items-center justify-center mb-6 text-xl">
+                        <i class="fas fa-rocket"></i>
+                    </div>
+                    <h3 class="text-xl font-bold text-grayBlue mb-6">Tools & Cloud</h3>
+                    <div class="flex flex-wrap gap-2">
+                        <span class="px-3 py-1 bg-gray-100 text-gray-600 text-xs font-bold rounded-full">AWS (EC2, S3)</span>
+                        <span class="px-3 py-1 bg-gray-100 text-gray-600 text-xs font-bold rounded-full">Docker</span>
+                        <span class="px-3 py-1 bg-gray-100 text-gray-600 text-xs font-bold rounded-full">Git / GitHub</span>
+                        <span class="px-3 py-1 bg-gray-100 text-gray-600 text-xs font-bold rounded-full">LLM Integration</span>
+                        <span class="px-3 py-1 bg-gray-100 text-gray-600 text-xs font-bold rounded-full">Nginx</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- FOOTER -->
+    <footer id="contact" class="py-24 bg-grayBlue text-center relative overflow-hidden dark-trigger">
+        <div class="absolute top-0 left-0 w-full h-1.5 bg-gradient-to-r from-grayBlue via-brandOrange to-grayBlue"></div>
+        <div class="relative z-10 px-6">
+            <h2 class="text-3xl md:text-4xl font-black text-white mb-8">WORK WITH ME?</h2>
+            <div class="flex justify-center gap-8 mb-12">
+                <a href="https://wa.me/919136952869" class="text-white text-3xl hover:text-brandOrange hover:-translate-y-2 transition-all hover-trigger"><i class="fab fa-whatsapp"></i></a>
+                <a href="mailto:Siddheshmy2@gmail.com" class="text-white text-3xl hover:text-brandOrange hover:-translate-y-2 transition-all hover-trigger"><i class="fas fa-envelope"></i></a>
+                <a href="https://github.com/Sid1167" class="text-white text-3xl hover:text-brandOrange hover:-translate-y-2 transition-all hover-trigger"><i class="fab fa-github"></i></a>
+            </div>
+            <p class="text-gray-500 text-xs tracking-[0.3em] font-bold">© 2025 SIDDHESH YEERABATTINI</p>
+        </div>
+    </footer>
+
+    <!-- SCRIPTS -->
+    <script>
+        // Mobile Menu Logic
+        const menuBtn = document.getElementById('menu-btn');
+        const mobileMenu = document.getElementById('mobile-menu');
+        const mobileLinks = document.querySelectorAll('.mobile-link');
+        let isMenuOpen = false;
+
+        menuBtn.addEventListener('click', () => {
+            isMenuOpen = !isMenuOpen;
+            if(isMenuOpen) {
+                mobileMenu.classList.add('open');
+                menuBtn.innerHTML = '<i class="fas fa-times"></i>';
+            } else {
+                mobileMenu.classList.remove('open');
+                menuBtn.innerHTML = '<i class="fas fa-bars"></i>';
+            }
+        });
+
+        mobileLinks.forEach(link => {
+            link.addEventListener('click', () => {
+                isMenuOpen = false;
+                mobileMenu.classList.remove('open');
+                menuBtn.innerHTML = '<i class="fas fa-bars"></i>';
+            });
+        });
+
+        // Scroll To Top Logic
+        const scrollToTopBtn = document.getElementById('scrollToTop');
+        
+        window.addEventListener('scroll', () => {
+            if (window.scrollY > 300) {
+                scrollToTopBtn.classList.add('show');
+            } else {
+                scrollToTopBtn.classList.remove('show');
+            }
+        });
+
+        scrollToTopBtn.addEventListener('click', () => {
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        });
+
+        // Custom Cursor Logic (Bulletproof Version)
+        const cursorDot = document.querySelector('.cursor-dot');
+        const cursorOutline = document.querySelector('.cursor-outline');
+
+        window.addEventListener('mousemove', (e) => {
+            const x = e.clientX;
+            const y = e.clientY;
+            
+            cursorDot.style.left = `${x}px`;
+            cursorDot.style.top = `${y}px`;
+
+            cursorOutline.animate({
+                left: `${x}px`,
+                top: `${y}px`
+            }, { duration: 400, fill: "forwards" });
+
+            // ACTIVE CURSOR COLOR CHECK
+            const target = e.target;
+            const isDark = target.matches('h1, h2, h3, h4, h5, h6, a, button, .dark-trigger, .text-grayBlue') || 
+                           target.closest('h1, h2, h3, h4, h5, h6, a, button, .dark-trigger, .text-grayBlue');
+
+            if (isDark) {
+                document.body.classList.add('on-dark-bg');
+            } else {
+                document.body.classList.remove('on-dark-bg');
+            }
+
+            // HOVER SCALE CHECK
+            const isHover = target.matches('.hover-trigger') || target.closest('.hover-trigger');
+            if (isHover) {
+                document.body.classList.add('hovering');
+            } else {
+                document.body.classList.remove('hovering');
+            }
+        });
+
+        // Scroll Spy
+        const sections = document.querySelectorAll('.section');
+        const navDots = document.querySelectorAll('.dot-link');
+        const pageNum = document.getElementById('page-num');
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if(entry.isIntersecting) {
+                    const id = entry.target.id;
+                    navDots.forEach(dot => dot.classList.remove('dot-active'));
+                    const activeDot = document.querySelector(`.dot-link[href="#${id}"]`);
+                    if(activeDot) {
+                        activeDot.classList.add('dot-active');
+                        pageNum.innerText = activeDot.dataset.index;
+                    }
+                }
+            });
+        }, {threshold: 0.3});
+
+        sections.forEach(sec => observer.observe(sec));
+
+        // Reveal on Scroll
+        const revealObserver = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if(entry.isIntersecting) {
+                    entry.target.classList.add('active');
+                }
+            });
+        }, {threshold: 0.1});
+
+        document.querySelectorAll('.reveal').forEach(el => revealObserver.observe(el));
+    </script>
+</body>
+</html>
