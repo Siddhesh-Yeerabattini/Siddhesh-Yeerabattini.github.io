@@ -45,7 +45,7 @@
     </script>
 
     <style>
-        /* --- CORE STYLES (Identical to Main Page) --- */
+        /* --- CORE STYLES --- */
         body {
             background-color: #FDFBF7;
             color: #2B323F;
@@ -58,7 +58,7 @@
             transition: background-color 0.3s;
         }
 
-        /* Custom Cursor - Hidden on Touch Devices */
+        /* Custom Cursor */
         .cursor-dot, .cursor-outline {
             display: none; /* Default hidden */
         }
@@ -76,7 +76,6 @@
                 transition: width 0.3s, height 0.3s, background 0.3s, border-color 0.2s;
             }
             
-            /* Hover State (Scale up) */
             body.hovering .cursor-dot { transform: scale(0.5); }
             body.hovering .cursor-outline { 
                 width: 60px; height: 60px; 
@@ -84,7 +83,6 @@
                 border-color: #EC5E27; 
             }
 
-            /* Dark Background State (Change Color to Orange) */
             body.on-dark-bg .cursor-dot {
                 background: #EC5E27 !important; /* Brand Orange on Dark */
             }
@@ -153,6 +151,113 @@
             opacity: 1;
             transform: translateY(0);
         }
+
+        /* --- CHATBOT ANIMATIONS & CHARACTER --- */
+        @keyframes robotFloat {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-6px); }
+        }
+        
+        @keyframes blink {
+            0%, 48%, 52%, 100% { transform: scaleY(1); }
+            50% { transform: scaleY(0.1); }
+        }
+
+        @keyframes antennaWiggle {
+            0%, 100% { transform: rotate(0deg); }
+            25% { transform: rotate(-10deg); }
+            75% { transform: rotate(10deg); }
+        }
+
+        .robot-container {
+            position: relative;
+            width: 40px;
+            height: 40px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            animation: robotFloat 3s ease-in-out infinite;
+        }
+
+        .robot-head {
+            width: 32px;
+            height: 28px;
+            background: #fff;
+            border-radius: 8px;
+            position: relative;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 2;
+        }
+
+        .robot-eyes {
+            display: flex;
+            gap: 6px;
+        }
+
+        .robot-eye {
+            width: 6px;
+            height: 6px;
+            background: #2B323F;
+            border-radius: 50%;
+            animation: blink 4s infinite;
+        }
+
+        .robot-antenna {
+            position: absolute;
+            top: -12px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 2px;
+            height: 12px;
+            background: #EC5E27;
+            animation: antennaWiggle 3s infinite ease-in-out;
+        }
+
+        .robot-antenna::after {
+            content: '';
+            position: absolute;
+            top: -4px;
+            left: -3px;
+            width: 8px;
+            height: 8px;
+            background: #EC5E27;
+            border-radius: 50%;
+            box-shadow: 0 0 5px #EC5E27;
+        }
+
+        /* Chat Window Animations */
+        #chat-window {
+            transform-origin: bottom right;
+            transition: all 0.4s cubic-bezier(0.19, 1, 0.22, 1);
+        }
+        
+        #chat-window.hidden {
+            display: none;
+        }
+        
+        #chat-window.closed {
+            opacity: 0;
+            transform: scale(0.8) translateY(20px);
+            pointer-events: none;
+        }
+
+        #chat-window.open {
+            opacity: 1;
+            transform: scale(1) translateY(0);
+            pointer-events: auto;
+        }
+
+        .message-enter {
+            animation: messageSlideIn 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards;
+        }
+
+        @keyframes messageSlideIn {
+            from { opacity: 0; transform: translateY(10px) scale(0.95); }
+            to { opacity: 1; transform: translateY(0) scale(1); }
+        }
     </style>
 </head>
 <body class="antialiased selection:bg-brandOrange selection:text-white">
@@ -161,14 +266,14 @@
     <div class="cursor-dot"></div>
     <div class="cursor-outline"></div>
 
-    <!-- Scroll To Top Button -->
-    <button id="scrollToTop" class="fixed bottom-8 left-8 md:left-auto md:right-12 z-50 bg-brandOrange text-milk w-12 h-12 rounded-full flex items-center justify-center shadow-lg translate-y-20 opacity-0 hover:bg-grayBlue hover-trigger pointer-events-auto cursor-pointer border-none outline-none">
+    <!-- Scroll To Top Button (Moved up to accommodate Chatbot) -->
+    <button id="scrollToTop" class="fixed bottom-9 right-[120px] z-40 bg-brandOrange text-milk w-12 h-12 rounded-full flex items-center justify-center shadow-lg translate-y-20 opacity-0 hover:bg-grayBlue hover-trigger pointer-events-auto cursor-pointer border-none outline-none transition-all">
         <i class="fas fa-arrow-up text-lg"></i>
     </button>
 
     <!-- Navigation -->
     <nav class="fixed top-0 w-full z-50 px-6 md:px-8 py-4 md:py-6 flex justify-between items-center bg-milk/90 backdrop-blur-md">
-        <div class="text-xl md:text-2xl font-bold tracking-tighter flex items-center gap-2 hover-trigger cursor-none relative z-50"
+        <div class="text-xl md:text-2xl font-bold tracking-tighter flex items-center gap-2 hover-trigger cursor-none relative z-50 pointer-events-auto"
         onClick="window.location.href='index.html'">
             <span class="w-8 h-8 bg-grayBlue text-milk rounded-full flex items-center justify-center font-bold">S</span>
             SIDDHESH
@@ -183,7 +288,7 @@
         </div>
 
         <!-- dark-trigger added here -->
-        <a href="#contact" class="hidden md:block px-6 py-2 border border-grayBlue text-grayBlue text-sm font-bold hover:bg-grayBlue hover:text-white transition-all hover-trigger dark-trigger rounded-full">
+        <a href="index.html#contact" class="hidden md:block px-6 py-2 border border-grayBlue text-grayBlue text-sm font-bold hover:bg-grayBlue hover:text-white transition-all hover-trigger dark-trigger rounded-full">
             LET'S TALK
         </a>
 
@@ -198,7 +303,7 @@
         <a href="index.html#home" class="text-2xl font-bold text-grayBlue mobile-link">HOME</a>
         <a href="#" class="text-2xl font-bold text-brandOrange mobile-link">ABOUT</a>
         <a href="index.html#services" class="text-2xl font-bold text-grayBlue mobile-link">SERVICES</a>
-        <a href="#contact" class="px-8 py-3 border border-grayBlue text-grayBlue text-lg font-bold rounded-full mobile-link">LET'S TALK</a>
+        <a href="index.html#contact" class="px-8 py-3 border border-grayBlue text-grayBlue text-lg font-bold rounded-full mobile-link">LET'S TALK</a>
     </div>
 
     <!-- Side Navigation (Right - Hidden on Mobile) -->
@@ -216,7 +321,6 @@
     </div>
 
     <!-- HEADER / HERO -->
-    <!-- ADDED CLASS: section -->
     <section id="hero" class="section pt-40 pb-20 px-6 relative overflow-hidden">
         <div class="container mx-auto">
             <div class="max-w-4xl mx-auto text-center reveal">
@@ -237,7 +341,6 @@
     </section>
 
     <!-- MY STORY SECTION -->
-    <!-- ADDED CLASS: section -->
     <section id="my-story" class="section py-20 relative">
         <div class="container mx-auto px-6">
             <div class="grid md:grid-cols-2 gap-16 items-center">
@@ -276,7 +379,6 @@
     </section>
 
     <!-- TECHNICAL ARSENAL BAR -->
-    <!-- ADDED CLASS: section -->
     <section id="technical-arsenal" class="section py-20 md:py-32 relative">
         <div class="container mx-auto px-6">
             <div class="grid md:grid-cols-2 gap-12 md:gap-20">
@@ -323,7 +425,6 @@
     </section>
 
     <!-- JOURNEY TIMELINE -->
-    <!-- ADDED CLASS: section -->
     <section id="timeline" class="section py-20 bg-gray-50 border-y border-gray-200">
         <div class="container mx-auto px-6 max-w-4xl">
             <h2 class="text-4xl font-black text-grayBlue mb-16 text-center reveal">The <span class="text-brandOrange">Timeline</span></h2>
@@ -353,7 +454,7 @@
                 </div>
 
                 <!-- Item 3 -->
-                <!-- <div class="relative reveal hover-trigger" style="transition-delay: 200ms">
+                <div class="relative reveal hover-trigger" style="transition-delay: 200ms">
                     <div class="absolute -left-[41px] top-1 w-5 h-5 rounded-full bg-grayBlue border-4 border-white shadow-md"></div>
                     <span class="text-xs font-bold text-gray-400 tracking-widest mb-1 block">2022</span>
                     <h3 class="text-xl font-bold text-grayBlue">Master's in Full Stack</h3>
@@ -361,14 +462,13 @@
                     <p class="text-gray-500 mt-2 font-light text-sm">
                         Completed intensive training in Java, Python, and Web Development frameworks, transitioning from a Mass Media background to software engineering.
                     </p>
-                </div> -->
+                </div>
 
             </div>
         </div>
     </section>
 
     <!-- DETAILED SKILLS -->
-    <!-- ADDED CLASS: section -->
     <section id="skills" class="section py-20 relative">
         <div class="container mx-auto px-6">
             <h2 class="text-4xl font-black text-grayBlue mb-16 text-center reveal">What I <span class="text-brandOrange">Speak</span></h2>
@@ -436,6 +536,102 @@
         </div>
     </footer>
 
+    <!-- Chatbot Widget -->
+    <div id="chatbot-container" class="fixed bottom-8 right-8 z-50 flex flex-col items-end font-sans">
+        
+        <!-- Chat Window -->
+        <div id="chat-window" class="bg-white w-80 sm:w-96 h-[500px] rounded-2xl shadow-2xl overflow-hidden border border-gray-200 mb-4 flex flex-col closed hidden">
+            
+            <!-- Header -->
+            <div class="bg-grayBlue p-4 flex items-center justify-between shadow-md z-10">
+                <div class="flex items-center gap-3">
+                    <!-- Mini Robot for Header -->
+                    <div class="w-10 h-10 bg-white/10 rounded-full flex items-center justify-center border border-white/20">
+                        <div class="robot-container" style="transform: scale(0.7); animation: none;">
+                            <div class="robot-antenna"></div>
+                            <div class="robot-head">
+                                <div class="robot-eyes">
+                                    <div class="robot-eye"></div>
+                                    <div class="robot-eye"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div>
+                        <h3 class="text-white font-bold text-sm tracking-wide">Siddhesh AI</h3>
+                        <div class="flex items-center gap-1.5">
+                            <span class="w-1.5 h-1.5 rounded-full bg-green-400 animate-pulse"></span>
+                            <span class="text-xs text-gray-300 font-medium">Online</span>
+                        </div>
+                    </div>
+                </div>
+                <button id="close-chat" class="w-8 h-8 rounded-full bg-white/5 hover:bg-white/10 flex items-center justify-center text-gray-300 hover:text-white transition-all">
+                    <i class="fas fa-times text-sm"></i>
+                </button>
+            </div>
+            
+            <!-- Messages Area -->
+            <div id="chat-messages" class="flex-1 p-4 overflow-y-auto bg-[#FDFBF7] space-y-4 scroll-smooth">
+                
+                <!-- Date Separator -->
+                <div class="text-center">
+                    <span class="text-[10px] text-gray-400 font-medium uppercase tracking-widest bg-gray-100 px-2 py-1 rounded-full">Today</span>
+                </div>
+
+                <!-- Bot Welcome -->
+                <div class="flex gap-3 items-end message-enter">
+                    <div class="w-8 h-8 rounded-full bg-grayBlue flex-shrink-0 flex items-center justify-center text-white text-xs border border-gray-200 shadow-sm overflow-hidden">
+                         <!-- Mini Robot Icon -->
+                         <div class="robot-container" style="transform: scale(0.5); animation: none;">
+                            <div class="robot-antenna"></div>
+                            <div class="robot-head">
+                                <div class="robot-eyes">
+                                    <div class="robot-eye"></div>
+                                    <div class="robot-eye"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="bg-white border border-gray-100 p-4 rounded-2xl rounded-bl-none text-gray-600 text-sm shadow-sm max-w-[85%] leading-relaxed">
+                        Hi there! 👋 I'm Siddhesh's virtual assistant. 
+                        <br><br>
+                        I can tell you about his <b>projects</b>, <b>tech stack</b>, or <b>experience</b>. What would you like to know?
+                    </div>
+                </div>
+            </div>
+
+            <!-- Input Area -->
+            <div class="p-4 bg-white border-t border-gray-100">
+                <form id="chat-form" class="relative flex items-center">
+                    <input type="text" id="chat-input" placeholder="Ask me something..." class="w-full bg-gray-50 text-gray-700 pl-5 pr-12 py-3 rounded-full text-sm border border-gray-200 focus:outline-none focus:border-brandOrange focus:ring-1 focus:ring-brandOrange transition-all placeholder:text-gray-400">
+                    <button type="submit" class="absolute right-2 top-1/2 -translate-y-1/2 bg-brandOrange text-white w-8 h-8 rounded-full flex items-center justify-center hover:bg-grayBlue hover:scale-105 transition-all shadow-md group">
+                        <i class="fas fa-arrow-up text-xs group-hover:-translate-y-0.5 transition-transform"></i>
+                    </button>
+                </form>
+                <div class="text-center mt-2">
+                    <span class="text-[10px] text-gray-300">Powered by Gemini AI</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Animated Toggle Button -->
+        <button id="chatbot-toggle" class="relative w-16 h-16 bg-grayBlue rounded-full shadow-2xl flex items-center justify-center hover:scale-105 transition-all duration-300 group hover:bg-brandOrange border-4 border-white/50">
+            <!-- CSS Robot Character -->
+            <div class="robot-container">
+                <div class="robot-antenna"></div>
+                <div class="robot-head">
+                    <div class="robot-eyes">
+                        <div class="robot-eye"></div>
+                        <div class="robot-eye"></div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Notification Dot -->
+            <span id="chat-notification" class="absolute top-0 right-0 w-4 h-4 bg-brandOrange rounded-full border-2 border-white flex items-center justify-center animate-bounce"></span>
+        </button>
+    </div>
+
     <!-- SCRIPTS -->
     <script>
         // Mobile Menu Logic
@@ -496,8 +692,8 @@
 
             // ACTIVE CURSOR COLOR CHECK
             const target = e.target;
-            const isDark = target.matches('h1, h2, h3, h4, h5, h6, a, button, .dark-trigger, .text-grayBlue') || 
-                           target.closest('h1, h2, h3, h4, h5, h6, a, button, .dark-trigger, .text-grayBlue');
+            const isDark = target.matches('h1, h2, h3, h4, h5, h6, a, button, .dark-trigger, .text-grayBlue, .text-white') || 
+                           target.closest('h1, h2, h3, h4, h5, h6, a, button, .dark-trigger, .text-grayBlue, .text-white');
 
             if (isDark) {
                 document.body.classList.add('on-dark-bg');
@@ -546,5 +742,8 @@
 
         document.querySelectorAll('.reveal').forEach(el => revealObserver.observe(el));
     </script>
+    
+    <!-- Link to Separate AI Logic File -->
+    <script src="static/js/ai_assistant.js" defer></script>
 </body>
 </html>
