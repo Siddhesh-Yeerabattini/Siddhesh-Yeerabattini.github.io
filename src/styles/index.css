@@ -1,0 +1,240 @@
+@import "tailwindcss";
+
+@theme {
+  --color-milk: #FDFBF7;
+  --color-grayBlue: #2B323F;
+  --color-brandOrange: #EC5E27;
+  --color-lightGray: #E5E7EB;
+  --font-sans: "Poppins", sans-serif;
+  --font-display: "Poppins", sans-serif;
+}
+
+body {
+  background-color: var(--color-milk);
+  color: var(--color-grayBlue);
+  overflow-x: hidden;
+  font-family: var(--font-sans);
+}
+
+/* The fixed side nav-dot column (Nav.tsx, `fixed right-8 ... hidden md:flex`)
+   overlays page content instead of taking up document flow. At in-between
+   desktop widths (e.g. ~1366px) a plain px-6 right edge lets section content
+   run underneath it. Reserve real clearance on every .container once that
+   column is visible, without touching the left edge (nothing sits there). */
+@media (min-width: 768px) {
+  .container {
+    padding-right: 6rem;
+  }
+}
+
+@media (hover: hover) and (pointer: fine) {
+  body {
+    cursor: none;
+  }
+}
+
+/* Custom cursor */
+.cursor-dot,
+.cursor-outline {
+  display: none;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .cursor-dot {
+    display: block;
+    width: 8px;
+    height: 8px;
+    background: var(--color-grayBlue);
+    position: fixed;
+    top: 0;
+    left: 0;
+    border-radius: 50%;
+    z-index: 9999;
+    pointer-events: none;
+    transition: transform 0.1s, background 0.2s;
+  }
+  .cursor-outline {
+    display: block;
+    width: 40px;
+    height: 40px;
+    border: 1px solid rgba(43, 50, 63, 0.3);
+    position: fixed;
+    top: 0;
+    left: 0;
+    transform: translate(-50%, -50%);
+    border-radius: 50%;
+    z-index: 9999;
+    pointer-events: none;
+    transition: width 0.3s, height 0.3s, background 0.3s, border-color 0.2s;
+  }
+
+  body.hovering .cursor-dot {
+    transform: scale(0.5);
+  }
+  body.hovering .cursor-outline {
+    width: 60px;
+    height: 60px;
+    background: rgba(236, 94, 39, 0.1);
+    border-color: var(--color-brandOrange);
+  }
+
+  body.on-dark-bg .cursor-dot {
+    background: var(--color-brandOrange) !important;
+  }
+  body.on-dark-bg .cursor-outline {
+    border-color: var(--color-brandOrange) !important;
+    background: rgba(236, 94, 39, 0.05);
+  }
+}
+
+/* Hero image mask */
+.hero-mask {
+  mask-image: radial-gradient(circle at center, black 60%, transparent 100%);
+  -webkit-mask-image: radial-gradient(circle at center, black 60%, transparent 100%);
+}
+
+/* Minimalist card hover */
+.clean-card {
+  background: rgba(255, 255, 255, 0.5);
+  border: 1px solid rgba(43, 50, 63, 0.1);
+  transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+.clean-card:hover {
+  border-color: var(--color-grayBlue);
+  transform: translateY(-5px);
+  background: #fff;
+  box-shadow: 0 10px 30px rgba(43, 50, 63, 0.05);
+}
+
+/* Nav dots */
+.dot-link {
+  transition: all 0.3s;
+}
+.dot-active {
+  background-color: var(--color-brandOrange) !important;
+  transform: scale(1.5);
+}
+
+/* Marquee */
+.marquee-container {
+  overflow: hidden;
+  white-space: nowrap;
+}
+.marquee-content {
+  display: inline-block;
+  animation: marquee 20s linear infinite;
+}
+@keyframes marquee {
+  0% {
+    transform: translateX(0);
+  }
+  100% {
+    transform: translateX(-50%);
+  }
+}
+
+/* Scroll-to-top button */
+#scrollToTop {
+  transition: all 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+#scrollToTop.show {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* Code window 3D tilt */
+.code-window {
+  transition: transform 0.3s ease-out;
+  transform-style: preserve-3d;
+}
+.code-window:hover {
+  transform: rotateY(5deg) rotateX(2deg) scale(1.02);
+}
+
+/* --- Chatbot robot avatar (decorative, continuous loops: stays CSS) --- */
+@keyframes robotFloat {
+  0%, 100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-6px);
+  }
+}
+@keyframes blink {
+  0%, 48%, 52%, 100% {
+    transform: scaleY(1);
+  }
+  50% {
+    transform: scaleY(0.1);
+  }
+}
+@keyframes antennaWiggle {
+  0%, 100% {
+    transform: rotate(0deg);
+  }
+  25% {
+    transform: rotate(-10deg);
+  }
+  75% {
+    transform: rotate(10deg);
+  }
+}
+
+.robot-container {
+  position: relative;
+  width: 40px;
+  height: 40px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  animation: robotFloat 3s ease-in-out infinite;
+}
+.robot-head {
+  width: 32px;
+  height: 28px;
+  background: #fff;
+  border-radius: 8px;
+  position: relative;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 2;
+}
+.robot-eyes {
+  display: flex;
+  gap: 6px;
+}
+.robot-eye {
+  width: 6px;
+  height: 6px;
+  background: var(--color-grayBlue);
+  border-radius: 50%;
+  animation: blink 4s infinite;
+}
+.robot-antenna {
+  position: absolute;
+  top: -12px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 2px;
+  height: 12px;
+  background: var(--color-brandOrange);
+  animation: antennaWiggle 3s infinite ease-in-out;
+}
+.robot-antenna::after {
+  content: "";
+  position: absolute;
+  top: -4px;
+  left: -3px;
+  width: 8px;
+  height: 8px;
+  background: var(--color-brandOrange);
+  border-radius: 50%;
+  box-shadow: 0 0 5px var(--color-brandOrange);
+}
+
+/* Modal backdrop blur (kept as CSS, layered under Framer Motion fade) */
+#estimator-modal {
+  backdrop-filter: blur(8px);
+}
